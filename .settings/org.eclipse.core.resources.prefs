@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//src/main/java/cn/edu/common/captcha/JcaptchaServlet.java=UTF-8
+encoding//src/main/java/cn/edu/core/bean/country/City.java=UTF-8
+encoding//src/main/java/cn/edu/core/bean/order/Order.java=UTF-8
+encoding//src/main/java/cn/edu/core/controller/admin/CenterController.java=UTF-8
+encoding//src/main/java/cn/edu/core/controller/admin/FrameController.java=UTF-8
+encoding//src/main/java/cn/edu/core/service/country/CityServiceImpl.java=UTF-8
+encoding//src/main/webapp/WEB-INF/ftl/productDetail.html=UTF-8
+encoding//src/main/webapp/index.jsp=UTF-8

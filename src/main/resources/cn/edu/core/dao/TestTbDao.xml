@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.4.4//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间：作用就是对sql进行分类化管理，理解为sql隔离
+注意：使用mapper代理方法开发，namespace有特殊的重要作用
+ -->
+<mapper namespace="cn.edu.core.dao.TestTbDao">
+    <insert id="addTestTb" parameterType="TestTb">
+        insert into test_tb(id,name,birthday) values(#{id},#{name},#{birthday})
+    </insert>
+    
+    
+</mapper>

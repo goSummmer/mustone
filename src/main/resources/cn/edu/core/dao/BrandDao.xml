@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.4.4//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间：作用就是对sql进行分类化管理，理解为sql隔离 注意：使用mapper代理方法开发，namespace有特殊的重要作用 -->
+<mapper namespace="cn.edu.core.dao.BrandDao">
+	<!-- ResultMap -->
+	<resultMap type="Brand" id="brand">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="description" property="description" />
+		<result column="img_url" property="imgUrl" />
+		<result column="sort" property="sort" />
+		<result column="is_display" property="isDisplay" />
+	</resultMap>
+	
+	<!-- brandSelector 品牌选择器        使用区别：  #{id}="id"  ${id}=id  -->
+	<sql id="brandSelector">
+	    select
+	    <if test="null!=fields">
+	        ${fields}
+	    </if>
+	    <if test="null==fields">
+	       id,name,description,img_url,web_site,sort,is_display
+	    </if>
+	     from bbs_brand
+	</sql>
+	
+	<!-- 品牌条件   进行条件处理  -->
+	<sql id="brandWhere">
+	    <where>
+		    <if test="isDisplay!=null">
+		        is_display=#{isDisplay}
+		    </if>
+		    <if test="name!=null">
+		        <if test="nameLike==false">
+		            and name=#{name}
+		        </if>
+		        <if test="nameLike==true">
+		            and name like "%"#{name}"%"
+		        </if>
+		    </if>
+		</where>
+	</sql>
+	
+	<!-- 品牌Order by -->
+	<sql id="brandOrderBy">
+	    <if test="fieldOrders !=null and fieldOrders.size()>0">
+	        order by
+	        <foreach collection="fieldOrders" item="fieldOrder" separator=",">
+	            ${fieldOrder.field} ${fieldOrder.order}
+	        </foreach>
+	    </if>
+	</sql>
+	
+	<!-- limit -->
+	<sql id="brandLimit">
+	    <if test="startRow!=null">
+		    limit #{startRow},#{pageSize}
+	    </if>
+	</sql>
+	
+	<!-- 查询品牌集合 -->
+	<select id="getBrandList" parameterType="BrandQuery" resultMap="brand">
+	    <include refid="brandSelector"></include>
+	    <include refid="brandWhere"></include>
+	    <include refid="brandOrderBy"></include>
+	    <include refid="brandLimit"></include>
+	</select>
+	
+	<!-- 查询品牌 使用get* -->
+	<select id="getBrandListWithPage" parameterType="Brand"
+		resultMap="brand">
+		select id,name,description,img_url,web_site,sort,is_display
+	  	from bbs_brand
+		<where>
+		    <if test="isDisplay!=null">
+		        is_display=#{isDisplay}
+		    </if>
+		    <if test="name!=null">
+		        and name=#{name}
+		    </if>
+		</where>
+		order by id desc
+		limit #{startRow},#{pageSize}
+	</select>
+	
+	<!-- 查询品牌总记录数 使用count(1)因为速度快节省资源。  -->
+	<select id="getBrandCount" parameterType="Brand" resultType="Integer">
+	    select count(1)
+	    from bbs_brand
+	    <where>
+		    <if test="isDisplay!=null">
+		        is_display=#{isDisplay}
+		    </if>
+		    <if test="name!=null">
+		        and name=#{name}
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 添加品牌 -->
+	<insert id="addBrand" parameterType="Brand">
+	    insert into bbs_brand
+	    <trim prefix="(" suffix=")">
+	        name,
+	        description,
+	        img_url,
+	        sort,
+	        is_display
+	    </trim>
+	    values
+	    <trim prefix="(" suffix=")">
+	       #{name},
+	       #{description},
+	       #{imgUrl},
+	       #{sort},
+	       #{isDisplay}
+	    </trim>
+	</insert>
+	
+	<!-- 单一品牌删除 通过主键  -->
+	<delete id="deleteBrandByKey" parameterType="Integer">
+	    delete from bbs_brand
+	    <where>
+	        id = #{id}
+	    </where>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBrandByKeys" parameterType="Integer">
+	    delete from bbs_brand
+	    <where>
+	        id in
+	        <foreach collection="array" item="id" open="(" close=")" separator=",">
+	            #{id}
+	        </foreach>
+	    </where>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateBrandByKey" parameterType="Brand">
+	    update bbs_brand
+	    <set>
+	        <if test="null!=name">
+	            name=#{name},
+	        </if>
+	        <if test="nul!=description">
+	            description=#{description},
+	        </if>
+	        <if test="null!=imgUrl">
+	            img_url=#{imgUrl},
+	        </if>
+	        <if test="null!=sort">
+	            sort=#{sort},
+	        </if>
+	        <if test="null!=isDisplay">
+	            is_display=#{isDisplay}
+	        </if>
+	    </set>
+	    <where>
+	        id=#{id}
+	    </where>
+	</update>
+	
+	<!-- 通过id查询一个品牌对象 -->
+	<select id="getBrandByKey" parameterType="Integer" resultMap="brand">
+	   select id,name,description,img_url,web_site,sort,is_display
+	   from bbs_brand
+	   <where>
+	       id=#{id}
+	   </where>
+	</select>
+</mapper>
